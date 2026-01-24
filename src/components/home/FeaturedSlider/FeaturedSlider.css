@@ -1,0 +1,79 @@
+/* src/components/home/FeaturedSlider/FeaturedSlider.css */
+
+.featured-slider {
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease;
+}
+
+.featured-slider:hover {
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Smooth slide transitions */
+@media (prefers-reduced-motion: no-preference) {
+  .featured-slider {
+    animation: slideIn 0.5s ease-in-out;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0.8;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .featured-slider img {
+    max-height: 180px;
+  }
+}
+
+@media (max-width: 640px) {
+  .featured-slider {
+    border-radius: 0.5rem;
+  }
+
+  .featured-slider h2 {
+    font-size: 1.5rem;
+  }
+
+  .featured-slider button {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Ensure smooth navigation button transitions */
+.featured-slider button[aria-label*="slide"] {
+  transition: all 0.3s ease;
+  will-change: transform, background-color;
+}
+
+.featured-slider button[aria-label*="slide"]:active {
+  transform: scale(0.95);
+}
+
+/* Dots indicator animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.featured-slider button[aria-label*="Go to slide"] {
+  animation: none;
+  transition: all 0.3s ease;
+}
+
+.featured-slider button[aria-label*="Go to slide"]:hover {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  transform: scale(1.2);
+}
