@@ -64,12 +64,22 @@
 .form-group input,
 .form-group textarea,
 .form-group select {
-  padding: 12px;
+  padding: 12px 14px;
   border: 2px solid #e0e0e0;
   border-radius: 6px;
   font-size: 14px;
   font-family: inherit;
   transition: all 0.3s ease;
+  background-color: #fafafa;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-group input:hover,
+.form-group textarea:hover,
+.form-group select:hover {
+  border-color: #ffb74d;
+  background-color: #fff8f0;
 }
 
 .form-group input:focus,
@@ -77,6 +87,7 @@
 .form-group select:focus {
   outline: none;
   border-color: #ff9800;
+  background-color: white;
   box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
 }
 
@@ -88,7 +99,8 @@
 
 .form-group textarea {
   resize: vertical;
-  min-height: 80px;
+  min-height: 100px;
+  font-family: inherit;
 }
 
 .form-row {
@@ -183,25 +195,157 @@
 }
 
 /* Responsive Design */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
+  .vendor-signup-container {
+    padding: 15px;
+  }
+
   .vendor-signup-card {
-    margin: 0 10px;
+    max-width: 100%;
+    margin: 0;
   }
 
   .vendor-signup-header {
-    padding: 30px 20px;
+    padding: 35px 25px;
   }
 
   .vendor-signup-header h2 {
-    font-size: 24px;
+    font-size: 26px;
   }
 
   .vendor-signup-body {
-    padding: 20px;
+    padding: 25px;
   }
 
   .vendor-signup-form {
-    gap: 16px;
+    gap: 18px;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    padding: 13px 14px;
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+
+  .form-group label {
+    font-size: 14px;
+  }
+
+  .btn-submit {
+    padding: 16px 24px;
+    font-size: 15px;
+  }
+
+  .form-info {
+    font-size: 13px;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  .vendor-signup-container {
+    padding: 10px;
+    min-height: auto;
+  }
+
+  .vendor-signup-card {
+    margin: 0;
+    border-radius: 8px;
+  }
+
+  .vendor-signup-header {
+    padding: 25px 15px;
+  }
+
+  .vendor-signup-header h2 {
+    font-size: 22px;
+  }
+
+  .vendor-signup-header .subtitle {
+    font-size: 14px;
+  }
+
+  .vendor-signup-body {
+    padding: 15px;
+  }
+
+  .vendor-signup-form {
+    gap: 15px;
+  }
+
+  .form-group {
+    margin-bottom: 5px;
+  }
+
+  .form-group label {
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    padding: 12px 12px;
+    font-size: 16px; /* Prevent iOS zoom */
+    border-radius: 5px;
+  }
+
+  .form-group textarea {
+    min-height: 90px;
+  }
+
+  .form-group small {
+    font-size: 11px;
+  }
+
+  .form-row {
+    gap: 15px;
+  }
+
+  .form-info {
+    font-size: 12px;
+    padding: 10px;
+    margin: 10px 0;
+  }
+
+  .form-info p {
+    margin: 5px 0;
+  }
+
+  .btn-submit {
+    padding: 14px 20px;
+    font-size: 14px;
+    margin-top: 8px;
+  }
+
+  .success-message p {
+    font-size: 14px;
+    margin: 8px 0;
+  }
+
+  .success-message p strong {
+    font-size: 16px;
+  }
+
+  .mt-4 {
+    margin-top: 12px;
+  }
+
+  .alert {
+    padding: 12px;
+    border-radius: 5px;
+  }
+
+  .alert p {
+    font-size: 13px;
+    margin: 6px 0;
+  }
+
+  .text-gray-600 {
+    font-size: 14px;
+  }
+}
   }
 
   .form-row {

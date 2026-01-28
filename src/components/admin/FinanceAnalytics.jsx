@@ -36,6 +36,11 @@ const FinanceAnalytics = ({ orders = [], products = [] }) => {
     fetchAdjustments();
   }, [orders, products, selectedPeriod]);
 
+  useEffect(() => {
+    // Recalculate when adjustments change
+    calculateFinancials();
+  }, [adjustments]);
+
   const fetchAdjustments = async () => {
     try {
       setLoadingAdjustments(true);

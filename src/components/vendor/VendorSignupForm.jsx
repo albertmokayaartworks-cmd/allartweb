@@ -88,15 +88,21 @@ export default function VendorSignupForm() {
 
       if (result.success) {
         // Send application received email and notification
-        await sendApplicationReceivedNotification({
-          userId: user.uid,
-          email: user.email,
-          businessName: formData.businessName.trim(),
-          firstName: user.displayName || formData.businessName.trim().split(' ')[0]
-        }, result.applicationId);
+        // Don't wait for email - it's non-critical
+        try {
+          await sendApplicationReceivedNotification({
+            userId: user.uid,
+            email: user.email,
+            businessName: formData.businessName.trim(),
+            firstName: user.displayName || formData.businessName.trim().split(' ')[0]
+          }, result.applicationId);
+        } catch (emailError) {
+          console.warn('Email notification failed (non-critical):', emailError);
+          // Don't throw error - application is still submitted
+        }
 
         setSubmitted(true);
-        toast.success('✅ Application submitted! Check your email for confirmation.');
+        toast.success('✅ Application submitted! You will receive updates via email shortly.');
         setFormData({
           businessName: '',
           businessDescription: '',
