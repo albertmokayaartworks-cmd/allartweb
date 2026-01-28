@@ -1,0 +1,128 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ==================== HELPER FUNCTIONS ====================
+    
+    // Check if user is admin
+    function isAdmin() {
+      return request.auth != null && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('isAdmin', false) == true;
+    }
+    
+    // Check if user is authenticated
+    function isAuth() {
+      return request.auth != null;
+    }
+    
+    // Get current user ID
+    function userId() {
+      return request.auth.uid;
+    }
+    
+    // ==================== PUBLIC COLLECTIONS ====================
+    
+    // Products - publicly readable
+    match /products/{productId} {
+      allow read: if true;
+      allow create: if isAdmin();
+      allow update, delete: if isAdmin();
+    }
+    
+    // Categories - publicly readable
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    // Reviews - publicly readable, users can create their own
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if isAuth();
+      allow update, delete: if isAuth() && resource.data.userId == userId();
+    }
+    
+    // ==================== USER COLLECTIONS ====================
+    
+    // Users - own data readable/writable, admin can read all
+    match /users/{uid} {
+      allow read: if isAuth() && (userId() == uid || isAdmin());
+      allow write: if isAuth() && userId() == uid;
+      allow update: if isAdmin();
+    }
+    
+    // ==================== ORDER COLLECTIONS ====================
+    
+    // Orders - users can read their own, admins can read all
+    match /orders/{orderId} {
+      allow read: if isAuth() && (resource.data.userId == userId() || isAdmin());
+      allow create: if isAuth();
+      allow update, delete: if isAdmin() || (isAuth() && resource.data.userId == userId());
+    }
+    
+    // ==================== VENDOR COLLECTIONS ====================
+    
+    // Vendor Applications - users can read their own, admins can read/write all
+    match /vendor_applications/{appId} {
+      allow read: if isAuth() && (resource.data.userId == userId() || isAdmin());
+      allow create: if isAuth();
+      allow update, delete: if isAdmin();
+    }
+    
+    // Vendor products - vendors can read/write their own, users can read, admins full access
+    match /vendor_products/{productId} {
+      allow read: if true;
+      allow create: if isAuth() && (request.resource.data.vendorId == userId() || isAdmin());
+      allow update, delete: if isAdmin() || (isAuth() && resource.data.vendorId == userId());
+    }
+    
+    // ==================== EMAIL & NOTIFICATION COLLECTIONS ====================
+    
+    // Admin emails - admin only
+    match /admin_emails/{emailId} {
+      allow read, write: if isAdmin();
+    }
+    
+    // Notifications - users can read their own, admins can read all and create
+    match /notifications/{notificationId} {
+      allow read: if isAuth() && (resource.data.userId == userId() || isAdmin());
+      allow create: if isAdmin();
+      allow update, delete: if isAuth() && resource.data.userId == userId();
+    }
+    
+    // ==================== SETTINGS & CONFIGURATION ====================
+    
+    // Settings - public read, admin write
+    match /settings/{document=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    // Email templates - admin only
+    match /emailTemplates/{templateId} {
+      allow read: if isAdmin();
+      allow write: if isAdmin();
+    }
+    
+    // ==================== CART (Temporary) ====================
+    
+    // Shopping carts - users own their cart
+    match /carts/{uid} {
+      allow read, write: if isAuth() && userId() == uid;
+    }
+    
+    // ==================== WISHLIST ====================
+    
+    // Wishlists - users own their wishlist
+    match /wishlists/{uid} {
+      allow read, write: if isAuth() && userId() == uid;
+    }
+    
+    // ==================== DENY ALL OTHER COLLECTIONS ====================
+    
+    // Default deny all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
