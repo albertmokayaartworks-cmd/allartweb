@@ -10,6 +10,7 @@ export default function VendorSignupForm() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [hasPendingApplication, setHasPendingApplication] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const [formData, setFormData] = useState({
     businessName: '',
     businessDescription: '',
@@ -73,6 +74,12 @@ export default function VendorSignupForm() {
       return;
     }
 
+    // Show confirmation dialog instead of submitting directly
+    setShowConfirmation(true);
+  };
+
+  const handleConfirmSubmit = async () => {
+    setShowConfirmation(false);
     setLoading(true);
 
     try {
@@ -119,6 +126,10 @@ export default function VendorSignupForm() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCancelConfirmation = () => {
+    setShowConfirmation(false);
   };
 
   if (!user) {
@@ -275,6 +286,57 @@ export default function VendorSignupForm() {
           </button>
         </form>
       </div>
+
+      {/* Confirmation Modal */}
+      {showConfirmation && (
+        <div className="confirmation-overlay">
+          <div className="confirmation-modal">
+            <div className="confirmation-header">
+              <h3>Confirm Your Information</h3>
+            </div>
+            <div className="confirmation-body">
+              <p className="confirmation-message">Please confirm that your information is correct before submitting:</p>
+              
+              <div className="confirmation-details">
+                <div className="detail-item">
+                  <label>Business Name:</label>
+                  <span>{formData.businessName}</span>
+                </div>
+                <div className="detail-item">
+                  <label>Business Category:</label>
+                  <span>{CATEGORIES.find(c => c.id === formData.businessCategory)?.name || 'Not selected'}</span>
+                </div>
+                <div className="detail-item">
+                  <label>Contact Phone:</label>
+                  <span>{formData.contactPhone}</span>
+                </div>
+                <div className="detail-item">
+                  <label>Business Address:</label>
+                  <span>{formData.businessAddress}</span>
+                </div>
+              </div>
+
+              <p className="confirmation-note">Once submitted, our admin team will review your application and contact you via email.</p>
+            </div>
+            <div className="confirmation-actions">
+              <button 
+                className="btn-cancel-confirm"
+                onClick={handleCancelConfirmation}
+                disabled={loading}
+              >
+                Back to Edit
+              </button>
+              <button 
+                className="btn-confirm-submit"
+                onClick={handleConfirmSubmit}
+                disabled={loading}
+              >
+                {loading ? 'Submitting...' : 'Confirm & Submit'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
